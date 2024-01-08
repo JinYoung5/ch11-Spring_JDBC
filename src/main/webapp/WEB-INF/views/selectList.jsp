@@ -14,6 +14,28 @@
 	<div class="align-right">
 		<input type="button" value="글쓰기" onclick="location.href='insert.do'">
 	</div>
+	<c:if test="${count == 0}">
+	<div class="result-display">표시할 내용이 없습니다.</div>
+	</c:if>
+	<c:if test="${count > 0}">
+	<table>
+		<tr>
+			<th>번호</th>
+			<th>제목</th>
+			<th>작성자</th>
+			<th>작성일</th>
+		</tr>
+		<c:forEach var="board" items="${list}">
+		<tr>
+			<td>${board.num}</td>
+			<td><a href="detail.do?num=${board.num}">${board.title}</a></td>
+			<td>${board.writer}</td>
+			<td>${board.reg_date}</td>
+		</tr>
+		</c:forEach>
+	</table>
+	<div class="align-center">${page}</div>
+	</c:if>
 </div>
 </body>
 </html>

@@ -12,10 +12,13 @@ import org.springframework.stereotype.Repository;
 import kr.spring.board.vo.BoardVO;
 
 @Repository
-public class BoardDAOImpl implements BoardDAO{
+public class BoardDAOImpl implements BoardDAO{	//상수화하는 이유 = 스프링jdbc 의 특징
 	private static final String INSERT_SQL = "INSERT INTO aboard (num,writer,title,passwd,content,reg_date) VALUES (aboard_seq.nextval,?,?,?,?,SYSDATE)";
 	private static final String SELECT_COUNT_SQL = "SELECT COUNT(*) FROM aboard";
 	private static final String SELECT_LIST_SQL = "SELECT * FROM (SELECT a.*,rownum rnum FROM (SELECT * FROM aboard ORDER BY reg_date DESC)a) WHERE rnum >=? AND rnum <= ?";
+	private static final String SELECT_DETAIL_SQL = "SELECT * FROM aboard WHERE num=?";
+	private static final String UPDATE_SQL = "UPDATE aboard SET writer=?, title=?, content=? WHERE num=?";
+	private static final String DELETE_SQL = "DELETE FROM aboard WHERE num=?";
 	
 	private RowMapper<BoardVO> rowMapper = new RowMapper<BoardVO>() {
 		public BoardVO mapRow(ResultSet rs, int rowNum) throws SQLException{
@@ -50,22 +53,21 @@ public class BoardDAOImpl implements BoardDAO{
 		return list;
 	}
 
-	@Override
+	@Override 
 	public BoardVO getBoard(int num) {
-		// TODO Auto-generated method stub
-		return null;
+		BoardVO board = jdbcTemplate.queryForObject(SELECT_DETAIL_SQL, new Object[] {num},rowMapper); //(rowMapper):한건의 레코드를 읽어옴
+		
+		return board;
 	}
 
 	@Override
 	public void updateBoard(BoardVO board) {
-		// TODO Auto-generated method stub
-		
+		jdbcTemplate.update(UPDATE_SQL, new Object[] {board.getWriter(), board.getTitle(), board.getContent(), board.getNum()});
 	}
 
 	@Override
 	public void deleteBoard(int num) {
-		// TODO Auto-generated method stub
-		
+		jdbcTemplate.update(DELETE_SQL, new Object[] {num});
 	}
 
 }

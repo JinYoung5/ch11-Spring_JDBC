@@ -40,4 +40,10 @@
 		<property name="dataSource" ref="dataSource" />
 	</bean>
 	
+	<!-- JDBC 기반 트랜잭션 관리자 설정(의무적으로 해줘야됨) -->
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager" p:datasource-ref="dataSource"/>
+	
+	<!-- 어노테이션 방식으로 트랜잭션 처리 -->
+	<tx:annotation-driven transaction-manager="transactionManager"/>
+	
 </beans>
